@@ -1,0 +1,51 @@
+# inseration sort
+import time
+import matplotlib.pyplot as plt
+
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+
+Arr1 = list(range(1, 6))
+Arr2 = list(range(1, 11))
+Arr3 = list(range(1, 51))
+Arr4 = list(range(1, 101))
+
+arrays = [Arr1, Arr2, Arr3, Arr4]
+input_sizes = [len(arr) for arr in arrays]
+
+def measure_time(sort_function, arr):
+    runs = 5
+    total_time = 0
+    for _ in range(runs):
+        copy_arr = arr.copy()
+        start = time.perf_counter()
+        sort_function(copy_arr)
+        end = time.perf_counter()
+        total_time += (end - start)
+    return total_time / runs
+
+insertion_times = []
+
+for arr in arrays:
+    avg_time = measure_time(insertion_sort, arr)
+    insertion_times.append(avg_time)
+    # Removed array printing part
+
+print("\nAverage Execution Times for Insertion Sort:")
+for size, time_taken in zip(input_sizes, insertion_times):
+    print(f"Input size {size}: {time_taken:.8f} seconds")
+
+plt.figure(figsize=(10, 6))  # Adjusted figure size
+plt.plot(input_sizes, insertion_times, marker='^', color='orange', label="Insertion Sort")  # Changed marker and color
+plt.title("Insertion Sort Performance")  # Changed title
+plt.xlabel("Input Size")  # Changed x-axis label
+plt.ylabel("Time (seconds)")  # Changed y-axis label
+plt.legend()
+plt.grid(False)  # Removed the grid
+plt.show()
