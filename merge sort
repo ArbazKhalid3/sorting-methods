@@ -1,0 +1,78 @@
+#merage sort
+import time
+import random
+import matplotlib.pyplot as plt
+
+# Merge Sort Algorithm
+def merge_sort(arr):
+    if len(arr) > 1:
+        mid = len(arr) // 2
+        left_half = arr[:mid]
+        right_half = arr[mid:]
+
+        merge_sort(left_half)
+        merge_sort(right_half)
+
+        i = j = k = 0
+
+        while i < len(left_half) and j < len(right_half):
+            if left_half[i] < right_half[j]:
+                arr[k] = left_half[i]
+                i += 1
+            else:
+                arr[k] = right_half[j]
+                j += 1
+            k += 1
+
+        while i < len(left_half):
+            arr[k] = left_half[i]
+            i += 1
+            k += 1
+
+        while j < len(right_half):
+            arr[k] = right_half[j]
+            j += 1
+            k += 1
+
+# Function to measure average execution time
+def measure_time(sort_function, arr, runs=5):
+    total_time = 0
+    for _ in range(runs):
+        copy_arr = arr.copy()
+        start_time = time.perf_counter()
+        sort_function(copy_arr)
+        end_time = time.perf_counter()
+        total_time += (end_time - start_time)
+    return total_time / runs
+
+# Create random arrays of different sizes
+sizes = [5, 10, 50, 100, 200, 500]
+arrays = [random.sample(range(1, size * 10), size) for size in sizes]
+
+# Measure times
+merge_sort_times = []
+
+for array in arrays:
+    avg_time = measure_time(merge_sort, array)
+    merge_sort_times.append(avg_time)
+
+    sorted_array = array.copy()
+    merge_sort(sorted_array)
+    print(f"Sorted array of size {len(array)}: {sorted_array}")
+
+# Print average execution times
+print("\nAverage Execution Times for Merge Sort:")
+for size, time_taken in zip(sizes, merge_sort_times):
+    print(f"Input size {size}: {time_taken:.8f} seconds")
+
+# Plotting the results
+plt.figure(figsize=(10, 6))
+plt.plot(sizes, merge_sort_times, marker='o', linestyle='-', color='green', label='Merge Sort')
+plt.title("Performance of Merge Sort on Random Arrays", fontsize=14)
+plt.xlabel("Input Size (Number of Elements)", fontsize=12)
+plt.ylabel("Average Execution Time (seconds)", fontsize=12)
+plt.xticks(sizes)
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.legend()
+plt.tight_layout()
+plt.show()
