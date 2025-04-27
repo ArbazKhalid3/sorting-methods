@@ -1,0 +1,49 @@
+#bubble sort
+import time
+import matplotlib.pyplot as plt
+
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+
+Arr1 = list(range(1, 6))
+Arr2 = list(range(1, 11))
+Arr3 = list(range(1, 51))
+Arr4 = list(range(1, 101))
+
+arrays = [Arr1, Arr2, Arr3, Arr4]
+input_sizes = [len(arr) for arr in arrays]
+
+def measure_time(sort_function, arr):
+    runs = 5
+    total_time = 0
+    for _ in range(runs):
+        copy_arr = arr.copy()
+        start = time.perf_counter()
+        sort_function(copy_arr)
+        end = time.perf_counter()
+        total_time += (end - start)
+    return total_time / runs
+
+bubble_times = []
+
+for arr in arrays:
+    avg_time = measure_time(bubble_sort, arr)
+    bubble_times.append(avg_time)
+    # Removed the array printing part
+
+print("\nAverage Execution Times:")
+for size, time_taken in zip(input_sizes, bubble_times):
+    print(f"Input size {size}: {time_taken:.8f} seconds")
+
+plt.figure(figsize=(10, 6))  # Adjusted figure size
+plt.plot(input_sizes, bubble_times, marker='*', color='red', label="Bubble Sort")  # Changed marker and color
+plt.title("Bubble Sort Performance - Modified")  # Changed title
+plt.xlabel("Input Size")  # Changed x-axis label
+plt.ylabel("Average Time (seconds)")  # Changed y-axis label
+plt.legend()
+plt.grid(False)  # Removed the grid
+plt.show()
